@@ -1,0 +1,246 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>StudyNeeds by Angel Store</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f9f9f9; margin: 0; padding: 0; }
+    header { background: #f28b82; color: white; padding: 20px; text-align: center; }
+    .container { padding: 20px; max-width: 900px; margin: auto; }
+    #searchBar {
+      width: 100%; padding: 10px; font-size: 16px;
+      margin-bottom: 20px; border-radius: 5px; border: 1px solid #ccc;
+    }
+    .item {
+      background: white; margin-bottom: 10px; padding: 15px;
+      border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .item h3 { margin: 0 0 8px; }
+    .item textarea {
+      width: 100%; min-height: 60px;
+      border: 1px solid #ccc; border-radius: 5px;
+      padding: 10px; font-family: monospace;
+    }
+    .save-btn {
+      margin-top: 8px; background: #25d366; color: white;
+      border: none; padding: 8px 12px; border-radius: 5px;
+      cursor: pointer;
+    }
+    footer {
+      text-align: center; padding: 10px;
+      font-size: 0.9em; color: gray;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>StudyNeeds by Angel Store</h1>
+    <p>Edit harga & simpan secara lokal di browser</p>
+  </header>
+  <div class="container">
+    <input type="text" id="searchBar" onkeyup="filterItems()" placeholder="Cari layanan atau produk..."/>
+    
+    <div class="item">
+      <h3>Cek Turnitin</h3>
+      <textarea id="harga-cek-turnitin">(tulis harga di sini)</textarea>
+      <button class="save-btn" onclick="saveData('harga-cek-turnitin')">Simpan</button>
+    </div>
+    
+    <div class="item">
+      <h3>Cek AI Indo & Eng</h3>
+      <textarea id="harga-cek-ai-indo-&-eng">(tulis harga di sini)</textarea>
+      <button class="save-btn" onclick="saveData('harga-cek-ai-indo-&-eng')">Simpan</button>
+    </div>
+    
+    <div class="item">
+      <h3>Translate File (DeepL)</h3>
+      <textarea id="harga-translate-file-deepl">(tulis harga di sini)</textarea>
+      <button class="save-btn" onclick="saveData('harga-translate-file-deepl')">Simpan</button>
+    </div>
+    
+    <div class="item">
+      <h3>Unlock Docs</h3>
+      <textarea id="harga-unlock-docs">(tulis harga di sini)</textarea>
+      <button class="save-btn" onclick="saveData('harga-unlock-docs')">Simpan</button>
+    </div>
+    
+    <div class="item">
+      <h3>Akun ChatGPT Pro/Plus</h3>
+      <textarea id="harga-akun-chatgpt-proplus">(tulis harga di sini)</textarea>
+      <button class="save-btn" onclick="saveData('harga-akun-chatgpt-proplus')">Simpan</button>
+    </div>
+    
+    <div class="item">
+      <h3>Akun Turnitin Biasa</h3>
+      <textarea id="harga-akun-turnitin-biasa">(tulis harga di sini)</textarea>
+      <button class="save-btn" onclick="saveData('harga-akun-turnitin-biasa')">Simpan</button>
+    </div>
+    
+    <div class="item">
+      <h3>Akun Turnitin Cek AI</h3>
+      <textarea id="harga-akun-turnitin-cek-ai">(tulis harga di sini)</textarea>
+      <button class="save-btn" onclick="saveData('harga-akun-turnitin-cek-ai')">Simpan</button>
+    </div>
+    
+    <div class="item">
+      <h3>Akun GPTZero</h3>
+      <textarea id="harga-akun-gptzero">(tulis harga di sini)</textarea>
+      <button class="save-btn" onclick="saveData('harga-akun-gptzero')">Simpan</button>
+    </div>
+    
+    <div class="item">
+      <h3>Akun DeepL Pro</h3>
+      <textarea id="harga-akun-deepl-pro">(tulis harga di sini)</textarea>
+      <button class="save-btn" onclick="saveData('harga-akun-deepl-pro')">Simpan</button>
+    </div>
+    
+    <div class="item">
+      <h3>Scite AI</h3>
+      <textarea id="harga-scite-ai">(tulis harga di sini)</textarea>
+      <button class="save-btn" onclick="saveData('harga-scite-ai')">Simpan</button>
+    </div>
+    
+    <div class="item">
+      <h3>Quillbot</h3>
+      <textarea id="harga-quillbot">(tulis harga di sini)</textarea>
+      <button class="save-btn" onclick="saveData('harga-quillbot')">Simpan</button>
+    </div>
+    
+    <div class="item">
+      <h3>Duolingo</h3>
+      <textarea id="harga-duolingo">(tulis harga di sini)</textarea>
+      <button class="save-btn" onclick="saveData('harga-duolingo')">Simpan</button>
+    </div>
+    
+    <div class="item">
+      <h3>Grammarly</h3>
+      <textarea id="harga-grammarly">(tulis harga di sini)</textarea>
+      <button class="save-btn" onclick="saveData('harga-grammarly')">Simpan</button>
+    </div>
+    
+    <div class="item">
+      <h3>Consensus AI</h3>
+      <textarea id="harga-consensus-ai">(tulis harga di sini)</textarea>
+      <button class="save-btn" onclick="saveData('harga-consensus-ai')">Simpan</button>
+    </div>
+    
+    <div class="item">
+      <h3>SmallPDF</h3>
+      <textarea id="harga-smallpdf">(tulis harga di sini)</textarea>
+      <button class="save-btn" onclick="saveData('harga-smallpdf')">Simpan</button>
+    </div>
+    
+    <div class="item">
+      <h3>Numerade</h3>
+      <textarea id="harga-numerade">(tulis harga di sini)</textarea>
+      <button class="save-btn" onclick="saveData('harga-numerade')">Simpan</button>
+    </div>
+    
+    <div class="item">
+      <h3>Humata AI</h3>
+      <textarea id="harga-humata-ai">(tulis harga di sini)</textarea>
+      <button class="save-btn" onclick="saveData('harga-humata-ai')">Simpan</button>
+    </div>
+    
+    <div class="item">
+      <h3>Perplexity AI</h3>
+      <textarea id="harga-perplexity-ai">(tulis harga di sini)</textarea>
+      <button class="save-btn" onclick="saveData('harga-perplexity-ai')">Simpan</button>
+    </div>
+    
+    <div class="item">
+      <h3>Connected AI</h3>
+      <textarea id="harga-connected-ai">(tulis harga di sini)</textarea>
+      <button class="save-btn" onclick="saveData('harga-connected-ai')">Simpan</button>
+    </div>
+    
+    <div class="item">
+      <h3>Scribd</h3>
+      <textarea id="harga-scribd">(tulis harga di sini)</textarea>
+      <button class="save-btn" onclick="saveData('harga-scribd')">Simpan</button>
+    </div>
+    
+    <div class="item">
+      <h3>WPS Office</h3>
+      <textarea id="harga-wps-office">(tulis harga di sini)</textarea>
+      <button class="save-btn" onclick="saveData('harga-wps-office')">Simpan</button>
+    </div>
+    
+    <div class="item">
+      <h3>Gamma AI</h3>
+      <textarea id="harga-gamma-ai">(tulis harga di sini)</textarea>
+      <button class="save-btn" onclick="saveData('harga-gamma-ai')">Simpan</button>
+    </div>
+    
+    <div class="item">
+      <h3>Canva</h3>
+      <textarea id="harga-canva">(tulis harga di sini)</textarea>
+      <button class="save-btn" onclick="saveData('harga-canva')">Simpan</button>
+    </div>
+    
+    <div class="item">
+      <h3>PicsArt</h3>
+      <textarea id="harga-picsart">(tulis harga di sini)</textarea>
+      <button class="save-btn" onclick="saveData('harga-picsart')">Simpan</button>
+    </div>
+    
+    <div class="item">
+      <h3>Vidio Prime</h3>
+      <textarea id="harga-vidio-prime">(tulis harga di sini)</textarea>
+      <button class="save-btn" onclick="saveData('harga-vidio-prime')">Simpan</button>
+    </div>
+    
+    <div class="item">
+      <h3>Viu</h3>
+      <textarea id="harga-viu">(tulis harga di sini)</textarea>
+      <button class="save-btn" onclick="saveData('harga-viu')">Simpan</button>
+    </div>
+    
+    <div class="item">
+      <h3>Cek Nomor GTC</h3>
+      <textarea id="harga-cek-nomor-gtc">(tulis harga di sini)</textarea>
+      <button class="save-btn" onclick="saveData('harga-cek-nomor-gtc')">Simpan</button>
+    </div>
+    
+    <div class="item">
+      <h3>Koin Line</h3>
+      <textarea id="harga-koin-line">(tulis harga di sini)</textarea>
+      <button class="save-btn" onclick="saveData('harga-koin-line')">Simpan</button>
+    </div>
+    
+  </div>
+
+  <footer>
+    &copy; 2025 StudyNeeds – Semua produk bisa diedit
+  </footer>
+
+  <script>
+    function saveData(id) {
+      const value = document.getElementById(id).value;
+      localStorage.setItem(id, value);
+      alert("Disimpan!");
+    }
+
+    function loadData() {
+      document.querySelectorAll("textarea").forEach(area => {
+        const saved = localStorage.getItem(area.id);
+        if (saved) area.value = saved;
+      });
+    }
+
+    function filterItems() {
+      var input = document.getElementById('searchBar');
+      var filter = input.value.toLowerCase();
+      var items = document.getElementsByClassName('item');
+      for (var i = 0; i < items.length; i++) {
+        var txtValue = items[i].textContent || items[i].innerText;
+        items[i].style.display = txtValue.toLowerCase().includes(filter) ? '' : 'none';
+      }
+    }
+
+    window.onload = loadData;
+  </script>
+</body>
+</html>
