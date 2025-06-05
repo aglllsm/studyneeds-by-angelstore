@@ -14,19 +14,31 @@
       margin-bottom: 20px; border-radius: 5px; border: 1px solid #ccc;
     }
     .item {
-      background: white; margin-bottom: 10px; padding: 15px;
+      background: white; margin-bottom: 30px; padding: 15px;
       border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    .item h3 { margin: 0 0 8px; }
+    .item h3 { margin: 0 0 10px; }
     .item textarea {
       width: 100%; min-height: 60px;
       border: 1px solid #ccc; border-radius: 5px;
       padding: 10px; font-family: monospace;
     }
-    .save-btn {
+    .save-btn, .upload-btn {
       margin-top: 8px; background: #25d366; color: white;
       border: none; padding: 8px 12px; border-radius: 5px;
-      cursor: pointer;
+      cursor: pointer; display: inline-block;
+    }
+    .upload-btn {
+      background: #fbbc04;
+      margin-left: 10px;
+    }
+    .img-preview {
+      margin-top: 10px;
+      width: 100%;
+      max-height: 400px;
+      object-fit: contain;
+      border: 1px solid #ccc;
+      border-radius: 5px;
     }
     footer {
       text-align: center; padding: 10px;
@@ -37,7 +49,7 @@
 <body>
   <header>
     <h1>StudyNeeds by Angel Store</h1>
-    <p>Edit harga & simpan secara lokal di browser</p>
+    <p>Edit harga atau upload gambar harga tiap aplikasi</p>
   </header>
   <div class="container">
     <input type="text" id="searchBar" onkeyup="filterItems()" placeholder="Cari layanan atau produk..."/>
@@ -46,174 +58,314 @@
       <h3>Cek Turnitin</h3>
       <textarea id="harga-cek-turnitin">(tulis harga di sini)</textarea>
       <button class="save-btn" onclick="saveData('harga-cek-turnitin')">Simpan</button>
+      <label class="upload-btn">
+        Upload Gambar Harga
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'cek-turnitin-img')" style="display: none;">
+      </label>
+      <img id="cek-turnitin-img" class="img-preview" src="" alt="Gambar Harga Cek Turnitin" />
     </div>
     
     <div class="item">
       <h3>Cek AI Indo & Eng</h3>
       <textarea id="harga-cek-ai-indo-&-eng">(tulis harga di sini)</textarea>
       <button class="save-btn" onclick="saveData('harga-cek-ai-indo-&-eng')">Simpan</button>
+      <label class="upload-btn">
+        Upload Gambar Harga
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'cek-ai-indo-&-eng-img')" style="display: none;">
+      </label>
+      <img id="cek-ai-indo-&-eng-img" class="img-preview" src="" alt="Gambar Harga Cek AI Indo & Eng" />
     </div>
     
     <div class="item">
       <h3>Translate File (DeepL)</h3>
       <textarea id="harga-translate-file-deepl">(tulis harga di sini)</textarea>
       <button class="save-btn" onclick="saveData('harga-translate-file-deepl')">Simpan</button>
+      <label class="upload-btn">
+        Upload Gambar Harga
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'translate-file-deepl-img')" style="display: none;">
+      </label>
+      <img id="translate-file-deepl-img" class="img-preview" src="" alt="Gambar Harga Translate File (DeepL)" />
     </div>
     
     <div class="item">
       <h3>Unlock Docs</h3>
       <textarea id="harga-unlock-docs">(tulis harga di sini)</textarea>
       <button class="save-btn" onclick="saveData('harga-unlock-docs')">Simpan</button>
+      <label class="upload-btn">
+        Upload Gambar Harga
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'unlock-docs-img')" style="display: none;">
+      </label>
+      <img id="unlock-docs-img" class="img-preview" src="" alt="Gambar Harga Unlock Docs" />
     </div>
     
     <div class="item">
       <h3>Akun ChatGPT Pro/Plus</h3>
       <textarea id="harga-akun-chatgpt-proplus">(tulis harga di sini)</textarea>
       <button class="save-btn" onclick="saveData('harga-akun-chatgpt-proplus')">Simpan</button>
+      <label class="upload-btn">
+        Upload Gambar Harga
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'akun-chatgpt-proplus-img')" style="display: none;">
+      </label>
+      <img id="akun-chatgpt-proplus-img" class="img-preview" src="" alt="Gambar Harga Akun ChatGPT Pro/Plus" />
     </div>
     
     <div class="item">
       <h3>Akun Turnitin Biasa</h3>
       <textarea id="harga-akun-turnitin-biasa">(tulis harga di sini)</textarea>
       <button class="save-btn" onclick="saveData('harga-akun-turnitin-biasa')">Simpan</button>
+      <label class="upload-btn">
+        Upload Gambar Harga
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'akun-turnitin-biasa-img')" style="display: none;">
+      </label>
+      <img id="akun-turnitin-biasa-img" class="img-preview" src="" alt="Gambar Harga Akun Turnitin Biasa" />
     </div>
     
     <div class="item">
       <h3>Akun Turnitin Cek AI</h3>
       <textarea id="harga-akun-turnitin-cek-ai">(tulis harga di sini)</textarea>
       <button class="save-btn" onclick="saveData('harga-akun-turnitin-cek-ai')">Simpan</button>
+      <label class="upload-btn">
+        Upload Gambar Harga
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'akun-turnitin-cek-ai-img')" style="display: none;">
+      </label>
+      <img id="akun-turnitin-cek-ai-img" class="img-preview" src="" alt="Gambar Harga Akun Turnitin Cek AI" />
     </div>
     
     <div class="item">
       <h3>Akun GPTZero</h3>
       <textarea id="harga-akun-gptzero">(tulis harga di sini)</textarea>
       <button class="save-btn" onclick="saveData('harga-akun-gptzero')">Simpan</button>
+      <label class="upload-btn">
+        Upload Gambar Harga
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'akun-gptzero-img')" style="display: none;">
+      </label>
+      <img id="akun-gptzero-img" class="img-preview" src="" alt="Gambar Harga Akun GPTZero" />
     </div>
     
     <div class="item">
       <h3>Akun DeepL Pro</h3>
       <textarea id="harga-akun-deepl-pro">(tulis harga di sini)</textarea>
       <button class="save-btn" onclick="saveData('harga-akun-deepl-pro')">Simpan</button>
+      <label class="upload-btn">
+        Upload Gambar Harga
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'akun-deepl-pro-img')" style="display: none;">
+      </label>
+      <img id="akun-deepl-pro-img" class="img-preview" src="" alt="Gambar Harga Akun DeepL Pro" />
     </div>
     
     <div class="item">
       <h3>Scite AI</h3>
       <textarea id="harga-scite-ai">(tulis harga di sini)</textarea>
       <button class="save-btn" onclick="saveData('harga-scite-ai')">Simpan</button>
+      <label class="upload-btn">
+        Upload Gambar Harga
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'scite-ai-img')" style="display: none;">
+      </label>
+      <img id="scite-ai-img" class="img-preview" src="" alt="Gambar Harga Scite AI" />
     </div>
     
     <div class="item">
       <h3>Quillbot</h3>
       <textarea id="harga-quillbot">(tulis harga di sini)</textarea>
       <button class="save-btn" onclick="saveData('harga-quillbot')">Simpan</button>
+      <label class="upload-btn">
+        Upload Gambar Harga
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'quillbot-img')" style="display: none;">
+      </label>
+      <img id="quillbot-img" class="img-preview" src="" alt="Gambar Harga Quillbot" />
     </div>
     
     <div class="item">
       <h3>Duolingo</h3>
       <textarea id="harga-duolingo">(tulis harga di sini)</textarea>
       <button class="save-btn" onclick="saveData('harga-duolingo')">Simpan</button>
+      <label class="upload-btn">
+        Upload Gambar Harga
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'duolingo-img')" style="display: none;">
+      </label>
+      <img id="duolingo-img" class="img-preview" src="" alt="Gambar Harga Duolingo" />
     </div>
     
     <div class="item">
       <h3>Grammarly</h3>
       <textarea id="harga-grammarly">(tulis harga di sini)</textarea>
       <button class="save-btn" onclick="saveData('harga-grammarly')">Simpan</button>
+      <label class="upload-btn">
+        Upload Gambar Harga
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'grammarly-img')" style="display: none;">
+      </label>
+      <img id="grammarly-img" class="img-preview" src="" alt="Gambar Harga Grammarly" />
     </div>
     
     <div class="item">
       <h3>Consensus AI</h3>
       <textarea id="harga-consensus-ai">(tulis harga di sini)</textarea>
       <button class="save-btn" onclick="saveData('harga-consensus-ai')">Simpan</button>
+      <label class="upload-btn">
+        Upload Gambar Harga
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'consensus-ai-img')" style="display: none;">
+      </label>
+      <img id="consensus-ai-img" class="img-preview" src="" alt="Gambar Harga Consensus AI" />
     </div>
     
     <div class="item">
       <h3>SmallPDF</h3>
       <textarea id="harga-smallpdf">(tulis harga di sini)</textarea>
       <button class="save-btn" onclick="saveData('harga-smallpdf')">Simpan</button>
+      <label class="upload-btn">
+        Upload Gambar Harga
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'smallpdf-img')" style="display: none;">
+      </label>
+      <img id="smallpdf-img" class="img-preview" src="" alt="Gambar Harga SmallPDF" />
     </div>
     
     <div class="item">
       <h3>Numerade</h3>
       <textarea id="harga-numerade">(tulis harga di sini)</textarea>
       <button class="save-btn" onclick="saveData('harga-numerade')">Simpan</button>
+      <label class="upload-btn">
+        Upload Gambar Harga
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'numerade-img')" style="display: none;">
+      </label>
+      <img id="numerade-img" class="img-preview" src="" alt="Gambar Harga Numerade" />
     </div>
     
     <div class="item">
       <h3>Humata AI</h3>
       <textarea id="harga-humata-ai">(tulis harga di sini)</textarea>
       <button class="save-btn" onclick="saveData('harga-humata-ai')">Simpan</button>
+      <label class="upload-btn">
+        Upload Gambar Harga
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'humata-ai-img')" style="display: none;">
+      </label>
+      <img id="humata-ai-img" class="img-preview" src="" alt="Gambar Harga Humata AI" />
     </div>
     
     <div class="item">
       <h3>Perplexity AI</h3>
       <textarea id="harga-perplexity-ai">(tulis harga di sini)</textarea>
       <button class="save-btn" onclick="saveData('harga-perplexity-ai')">Simpan</button>
+      <label class="upload-btn">
+        Upload Gambar Harga
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'perplexity-ai-img')" style="display: none;">
+      </label>
+      <img id="perplexity-ai-img" class="img-preview" src="" alt="Gambar Harga Perplexity AI" />
     </div>
     
     <div class="item">
       <h3>Connected AI</h3>
       <textarea id="harga-connected-ai">(tulis harga di sini)</textarea>
       <button class="save-btn" onclick="saveData('harga-connected-ai')">Simpan</button>
+      <label class="upload-btn">
+        Upload Gambar Harga
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'connected-ai-img')" style="display: none;">
+      </label>
+      <img id="connected-ai-img" class="img-preview" src="" alt="Gambar Harga Connected AI" />
     </div>
     
     <div class="item">
       <h3>Scribd</h3>
       <textarea id="harga-scribd">(tulis harga di sini)</textarea>
       <button class="save-btn" onclick="saveData('harga-scribd')">Simpan</button>
+      <label class="upload-btn">
+        Upload Gambar Harga
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'scribd-img')" style="display: none;">
+      </label>
+      <img id="scribd-img" class="img-preview" src="" alt="Gambar Harga Scribd" />
     </div>
     
     <div class="item">
       <h3>WPS Office</h3>
       <textarea id="harga-wps-office">(tulis harga di sini)</textarea>
       <button class="save-btn" onclick="saveData('harga-wps-office')">Simpan</button>
+      <label class="upload-btn">
+        Upload Gambar Harga
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'wps-office-img')" style="display: none;">
+      </label>
+      <img id="wps-office-img" class="img-preview" src="" alt="Gambar Harga WPS Office" />
     </div>
     
     <div class="item">
       <h3>Gamma AI</h3>
       <textarea id="harga-gamma-ai">(tulis harga di sini)</textarea>
       <button class="save-btn" onclick="saveData('harga-gamma-ai')">Simpan</button>
+      <label class="upload-btn">
+        Upload Gambar Harga
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'gamma-ai-img')" style="display: none;">
+      </label>
+      <img id="gamma-ai-img" class="img-preview" src="" alt="Gambar Harga Gamma AI" />
     </div>
     
     <div class="item">
       <h3>Canva</h3>
       <textarea id="harga-canva">(tulis harga di sini)</textarea>
       <button class="save-btn" onclick="saveData('harga-canva')">Simpan</button>
+      <label class="upload-btn">
+        Upload Gambar Harga
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'canva-img')" style="display: none;">
+      </label>
+      <img id="canva-img" class="img-preview" src="" alt="Gambar Harga Canva" />
     </div>
     
     <div class="item">
       <h3>PicsArt</h3>
       <textarea id="harga-picsart">(tulis harga di sini)</textarea>
       <button class="save-btn" onclick="saveData('harga-picsart')">Simpan</button>
+      <label class="upload-btn">
+        Upload Gambar Harga
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'picsart-img')" style="display: none;">
+      </label>
+      <img id="picsart-img" class="img-preview" src="" alt="Gambar Harga PicsArt" />
     </div>
     
     <div class="item">
       <h3>Vidio Prime</h3>
       <textarea id="harga-vidio-prime">(tulis harga di sini)</textarea>
       <button class="save-btn" onclick="saveData('harga-vidio-prime')">Simpan</button>
+      <label class="upload-btn">
+        Upload Gambar Harga
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'vidio-prime-img')" style="display: none;">
+      </label>
+      <img id="vidio-prime-img" class="img-preview" src="" alt="Gambar Harga Vidio Prime" />
     </div>
     
     <div class="item">
       <h3>Viu</h3>
       <textarea id="harga-viu">(tulis harga di sini)</textarea>
       <button class="save-btn" onclick="saveData('harga-viu')">Simpan</button>
+      <label class="upload-btn">
+        Upload Gambar Harga
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'viu-img')" style="display: none;">
+      </label>
+      <img id="viu-img" class="img-preview" src="" alt="Gambar Harga Viu" />
     </div>
     
     <div class="item">
       <h3>Cek Nomor GTC</h3>
       <textarea id="harga-cek-nomor-gtc">(tulis harga di sini)</textarea>
       <button class="save-btn" onclick="saveData('harga-cek-nomor-gtc')">Simpan</button>
+      <label class="upload-btn">
+        Upload Gambar Harga
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'cek-nomor-gtc-img')" style="display: none;">
+      </label>
+      <img id="cek-nomor-gtc-img" class="img-preview" src="" alt="Gambar Harga Cek Nomor GTC" />
     </div>
     
     <div class="item">
       <h3>Koin Line</h3>
       <textarea id="harga-koin-line">(tulis harga di sini)</textarea>
       <button class="save-btn" onclick="saveData('harga-koin-line')">Simpan</button>
+      <label class="upload-btn">
+        Upload Gambar Harga
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'koin-line-img')" style="display: none;">
+      </label>
+      <img id="koin-line-img" class="img-preview" src="" alt="Gambar Harga Koin Line" />
     </div>
     
   </div>
 
   <footer>
-    &copy; 2025 StudyNeeds – Semua produk bisa diedit
+    &copy; 2025 StudyNeeds by Angel Store
   </footer>
 
   <script>
@@ -228,6 +380,21 @@
         const saved = localStorage.getItem(area.id);
         if (saved) area.value = saved;
       });
+      const imgs = document.querySelectorAll("img.img-preview");
+      imgs.forEach(img => {
+        const savedImg = localStorage.getItem(img.id);
+        if (savedImg) img.src = savedImg;
+      });
+    }
+
+    function uploadImage(event, imgId) {
+      const reader = new FileReader();
+      reader.onload = function() {
+        const base64 = reader.result;
+        localStorage.setItem(imgId, base64);
+        document.getElementById(imgId).src = base64;
+      };
+      reader.readAsDataURL(event.target.files[0]);
     }
 
     function filterItems() {
