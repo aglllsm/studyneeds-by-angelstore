@@ -1,61 +1,79 @@
+
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>StudyNeeds by Angel Store</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #fff6f6; margin: 0; padding: 0; }
-    header { background: #f28b82; color: white; padding: 20px; text-align: center; }
-    .container { padding: 20px; max-width: 800px; margin: auto; }
-    #searchBar, #newProductName {
-      width: 100%; padding: 12px; font-size: 16px;
-      margin-bottom: 20px; border-radius: 8px; border: 1px solid #ccc;
+    body {
+      font-family: 'Comic Neue', cursive;
+      background: #fff0f0;
+      margin: 0;
+    }
+    header {
+      background-color: #ff9999;
+      padding: 20px;
+      text-align: center;
+      color: white;
+    }
+    .container {
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
     }
     .item {
-      background: white; margin-bottom: 30px; padding: 15px;
-      border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      background: white;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
     }
-    .item h3 { margin: 0 0 10px; color: #d32f2f; }
-    .item textarea {
-      width: 100%; min-height: 60px;
-      border: 1px solid #ccc; border-radius: 8px;
-      padding: 10px; font-family: monospace; font-size: 15px;
+    textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 10px;
+      border-radius: 4px;
     }
-    .save-btn, .upload-btn, #addProductBtn, .delete-btn, .clear-img-btn {
-      margin-top: 10px; background: #ff5252; color: white;
-      border: none; padding: 10px 14px; border-radius: 8px;
-      cursor: pointer; display: inline-block; font-weight: bold;
-    }
-    .upload-btn { background: #fbbc04; margin-left: 10px; }
-    .delete-btn { background: #d32f2f; margin-left: 10px; }
-    .clear-img-btn { background: #9c27b0; margin-left: 10px; }
     .img-preview-container {
-      margin-top: 12px; display: flex; overflow-x: auto; gap: 12px;
+      display: flex;
+      overflow-x: auto;
+      gap: 10px;
+      margin-top: 10px;
     }
     .img-preview {
-      max-height: 300px; border-radius: 8px;
-      border: 2px solid #e0e0e0; object-fit: contain;
+      max-height: 200px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
     }
-    footer {
-      text-align: center; padding: 16px;
-      font-size: 0.9em; color: gray; background: #fff0f0;
+    .save-btn, .upload-btn, .clear-img-btn, .delete-btn, .add-btn {
+      margin-top: 10px;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
     }
+    .save-btn { background-color: #ff4d4d; color: white; }
+    .upload-btn { background-color: #ffaa00; color: white; }
+    .clear-img-btn { background-color: #bb33ff; color: white; }
+    .delete-btn { background-color: #999999; color: white; }
+    .add-btn { background-color: #4CAF50; color: white; display: block; margin-top: 20px; }
   </style>
 </head>
 <body>
   <header>
     <h1>StudyNeeds by Angel Store</h1>
-    <p>Edit harga, upload banyak gambar, tambah dan hapus produk jualanmu dengan mudah!</p>
+    <p>Kelola semua produk jualanmu dengan mudah!</p>
   </header>
-
   <div class="container">
-    <input type="text" id="searchBar" onkeyup="filterItems()" placeholder="Cari layanan atau produk..."/>
-    <input type="text" id="newProductName" placeholder="Tambah nama produk baru...">
-    <button id="addProductBtn" onclick="addProduct()">Tambah Produk</button>
-    <div id="productList">
-    <div class="item" id="item-cek-turnitin" data-name="cek turnitin">
-      <h3>Cek Turnitin</h3>
+    <input type="text" id="search" placeholder="Cari produk..." onkeyup="filterItems()" style="width:100%; padding:10px; margin-bottom:20px;">
+    <input type="text" id="newProductName" placeholder="Nama produk baru" style="width:100%; padding:10px;">
+    <button class="add-btn" onclick="addProduct()">Tambah Produk</button>
+    <button class="add-btn" onclick="toggleList()" id="toggleBtn">Tampilkan Semua Produk</button>
+    <div id="product-list">
+    <div class="item" id="item-cek-turnitin" data-name="cek turnitin" style="">
+      <h3>cek turnitin</h3>
       <textarea id="harga-cek-turnitin" placeholder="(tulis harga di sini)"></textarea>
       <button class="save-btn" onclick="saveData('harga-cek-turnitin')">Simpan</button>
       <label class="upload-btn">
@@ -67,34 +85,34 @@
       <div id="cek-turnitin-imgs" class="img-preview-container"></div>
     </div>
     
-    <div class="item" id="item-cek-ai-indo-&-eng" data-name="cek ai indo & eng">
-      <h3>Cek AI Indo & Eng</h3>
-      <textarea id="harga-cek-ai-indo-&-eng" placeholder="(tulis harga di sini)"></textarea>
-      <button class="save-btn" onclick="saveData('harga-cek-ai-indo-&-eng')">Simpan</button>
+    <div class="item" id="item-cek-ai-indo-eng" data-name="cek ai indo & eng" style="display:none">
+      <h3>cek ai indo & eng</h3>
+      <textarea id="harga-cek-ai-indo-eng" placeholder="(tulis harga di sini)"></textarea>
+      <button class="save-btn" onclick="saveData('harga-cek-ai-indo-eng')">Simpan</button>
       <label class="upload-btn">
         Upload Gambar Harga
-        <input type="file" accept="image/*" onchange="uploadImage(event, 'cek-ai-indo-&-eng-imgs')" style="display: none;">
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'cek-ai-indo-eng-imgs')" style="display: none;">
       </label>
-      <button class="clear-img-btn" onclick="clearImages('cek-ai-indo-&-eng-imgs')">Hapus Semua Gambar</button>
-      <button class="delete-btn" onclick="deleteProduct('cek-ai-indo-&-eng')">Hapus Produk</button>
-      <div id="cek-ai-indo-&-eng-imgs" class="img-preview-container"></div>
+      <button class="clear-img-btn" onclick="clearImages('cek-ai-indo-eng-imgs')">Hapus Semua Gambar</button>
+      <button class="delete-btn" onclick="deleteProduct('cek-ai-indo-eng')">Hapus Produk</button>
+      <div id="cek-ai-indo-eng-imgs" class="img-preview-container"></div>
     </div>
     
-    <div class="item" id="item-translate-file-(deepl)" data-name="translate file (deepl)">
-      <h3>Translate File (DeepL)</h3>
-      <textarea id="harga-translate-file-(deepl)" placeholder="(tulis harga di sini)"></textarea>
-      <button class="save-btn" onclick="saveData('harga-translate-file-(deepl)')">Simpan</button>
+    <div class="item" id="item-translate-file-deepl" data-name="translate file (deepl)" style="display:none">
+      <h3>translate file (deepl)</h3>
+      <textarea id="harga-translate-file-deepl" placeholder="(tulis harga di sini)"></textarea>
+      <button class="save-btn" onclick="saveData('harga-translate-file-deepl')">Simpan</button>
       <label class="upload-btn">
         Upload Gambar Harga
-        <input type="file" accept="image/*" onchange="uploadImage(event, 'translate-file-(deepl)-imgs')" style="display: none;">
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'translate-file-deepl-imgs')" style="display: none;">
       </label>
-      <button class="clear-img-btn" onclick="clearImages('translate-file-(deepl)-imgs')">Hapus Semua Gambar</button>
-      <button class="delete-btn" onclick="deleteProduct('translate-file-(deepl)')">Hapus Produk</button>
-      <div id="translate-file-(deepl)-imgs" class="img-preview-container"></div>
+      <button class="clear-img-btn" onclick="clearImages('translate-file-deepl-imgs')">Hapus Semua Gambar</button>
+      <button class="delete-btn" onclick="deleteProduct('translate-file-deepl')">Hapus Produk</button>
+      <div id="translate-file-deepl-imgs" class="img-preview-container"></div>
     </div>
     
-    <div class="item" id="item-unlock-docs" data-name="unlock docs">
-      <h3>Unlock Docs</h3>
+    <div class="item" id="item-unlock-docs" data-name="unlock docs" style="display:none">
+      <h3>unlock docs</h3>
       <textarea id="harga-unlock-docs" placeholder="(tulis harga di sini)"></textarea>
       <button class="save-btn" onclick="saveData('harga-unlock-docs')">Simpan</button>
       <label class="upload-btn">
@@ -106,21 +124,21 @@
       <div id="unlock-docs-imgs" class="img-preview-container"></div>
     </div>
     
-    <div class="item" id="item-akun-chatgpt-pro/plus" data-name="akun chatgpt pro/plus">
-      <h3>Akun ChatGPT Pro/Plus</h3>
-      <textarea id="harga-akun-chatgpt-pro/plus" placeholder="(tulis harga di sini)"></textarea>
-      <button class="save-btn" onclick="saveData('harga-akun-chatgpt-pro/plus')">Simpan</button>
+    <div class="item" id="item-akun-chatgpt-proplus" data-name="akun chatgpt pro/plus" style="display:none">
+      <h3>akun chatgpt pro/plus</h3>
+      <textarea id="harga-akun-chatgpt-proplus" placeholder="(tulis harga di sini)"></textarea>
+      <button class="save-btn" onclick="saveData('harga-akun-chatgpt-proplus')">Simpan</button>
       <label class="upload-btn">
         Upload Gambar Harga
-        <input type="file" accept="image/*" onchange="uploadImage(event, 'akun-chatgpt-pro/plus-imgs')" style="display: none;">
+        <input type="file" accept="image/*" onchange="uploadImage(event, 'akun-chatgpt-proplus-imgs')" style="display: none;">
       </label>
-      <button class="clear-img-btn" onclick="clearImages('akun-chatgpt-pro/plus-imgs')">Hapus Semua Gambar</button>
-      <button class="delete-btn" onclick="deleteProduct('akun-chatgpt-pro/plus')">Hapus Produk</button>
-      <div id="akun-chatgpt-pro/plus-imgs" class="img-preview-container"></div>
+      <button class="clear-img-btn" onclick="clearImages('akun-chatgpt-proplus-imgs')">Hapus Semua Gambar</button>
+      <button class="delete-btn" onclick="deleteProduct('akun-chatgpt-proplus')">Hapus Produk</button>
+      <div id="akun-chatgpt-proplus-imgs" class="img-preview-container"></div>
     </div>
     
-    <div class="item" id="item-akun-turnitin-biasa" data-name="akun turnitin biasa">
-      <h3>Akun Turnitin Biasa</h3>
+    <div class="item" id="item-akun-turnitin-biasa" data-name="akun turnitin biasa" style="display:none">
+      <h3>akun turnitin biasa</h3>
       <textarea id="harga-akun-turnitin-biasa" placeholder="(tulis harga di sini)"></textarea>
       <button class="save-btn" onclick="saveData('harga-akun-turnitin-biasa')">Simpan</button>
       <label class="upload-btn">
@@ -132,8 +150,8 @@
       <div id="akun-turnitin-biasa-imgs" class="img-preview-container"></div>
     </div>
     
-    <div class="item" id="item-akun-turnitin-cek-ai" data-name="akun turnitin cek ai">
-      <h3>Akun Turnitin Cek AI</h3>
+    <div class="item" id="item-akun-turnitin-cek-ai" data-name="akun turnitin cek ai" style="display:none">
+      <h3>akun turnitin cek ai</h3>
       <textarea id="harga-akun-turnitin-cek-ai" placeholder="(tulis harga di sini)"></textarea>
       <button class="save-btn" onclick="saveData('harga-akun-turnitin-cek-ai')">Simpan</button>
       <label class="upload-btn">
@@ -145,8 +163,8 @@
       <div id="akun-turnitin-cek-ai-imgs" class="img-preview-container"></div>
     </div>
     
-    <div class="item" id="item-akun-gptzero" data-name="akun gptzero">
-      <h3>Akun GPTZero</h3>
+    <div class="item" id="item-akun-gptzero" data-name="akun gptzero" style="display:none">
+      <h3>akun gptzero</h3>
       <textarea id="harga-akun-gptzero" placeholder="(tulis harga di sini)"></textarea>
       <button class="save-btn" onclick="saveData('harga-akun-gptzero')">Simpan</button>
       <label class="upload-btn">
@@ -158,8 +176,8 @@
       <div id="akun-gptzero-imgs" class="img-preview-container"></div>
     </div>
     
-    <div class="item" id="item-akun-deepl-pro" data-name="akun deepl pro">
-      <h3>Akun DeepL Pro</h3>
+    <div class="item" id="item-akun-deepl-pro" data-name="akun deepl pro" style="display:none">
+      <h3>akun deepl pro</h3>
       <textarea id="harga-akun-deepl-pro" placeholder="(tulis harga di sini)"></textarea>
       <button class="save-btn" onclick="saveData('harga-akun-deepl-pro')">Simpan</button>
       <label class="upload-btn">
@@ -171,8 +189,8 @@
       <div id="akun-deepl-pro-imgs" class="img-preview-container"></div>
     </div>
     
-    <div class="item" id="item-scite-ai" data-name="scite ai">
-      <h3>Scite AI</h3>
+    <div class="item" id="item-scite-ai" data-name="scite ai" style="display:none">
+      <h3>scite ai</h3>
       <textarea id="harga-scite-ai" placeholder="(tulis harga di sini)"></textarea>
       <button class="save-btn" onclick="saveData('harga-scite-ai')">Simpan</button>
       <label class="upload-btn">
@@ -184,8 +202,8 @@
       <div id="scite-ai-imgs" class="img-preview-container"></div>
     </div>
     
-    <div class="item" id="item-quillbot" data-name="quillbot">
-      <h3>Quillbot</h3>
+    <div class="item" id="item-quillbot" data-name="quillbot" style="display:none">
+      <h3>quillbot</h3>
       <textarea id="harga-quillbot" placeholder="(tulis harga di sini)"></textarea>
       <button class="save-btn" onclick="saveData('harga-quillbot')">Simpan</button>
       <label class="upload-btn">
@@ -197,8 +215,8 @@
       <div id="quillbot-imgs" class="img-preview-container"></div>
     </div>
     
-    <div class="item" id="item-duolingo" data-name="duolingo">
-      <h3>Duolingo</h3>
+    <div class="item" id="item-duolingo" data-name="duolingo" style="display:none">
+      <h3>duolingo</h3>
       <textarea id="harga-duolingo" placeholder="(tulis harga di sini)"></textarea>
       <button class="save-btn" onclick="saveData('harga-duolingo')">Simpan</button>
       <label class="upload-btn">
@@ -210,8 +228,8 @@
       <div id="duolingo-imgs" class="img-preview-container"></div>
     </div>
     
-    <div class="item" id="item-grammarly" data-name="grammarly">
-      <h3>Grammarly</h3>
+    <div class="item" id="item-grammarly" data-name="grammarly" style="display:none">
+      <h3>grammarly</h3>
       <textarea id="harga-grammarly" placeholder="(tulis harga di sini)"></textarea>
       <button class="save-btn" onclick="saveData('harga-grammarly')">Simpan</button>
       <label class="upload-btn">
@@ -223,8 +241,8 @@
       <div id="grammarly-imgs" class="img-preview-container"></div>
     </div>
     
-    <div class="item" id="item-consensus-ai" data-name="consensus ai">
-      <h3>Consensus AI</h3>
+    <div class="item" id="item-consensus-ai" data-name="consensus ai" style="display:none">
+      <h3>consensus ai</h3>
       <textarea id="harga-consensus-ai" placeholder="(tulis harga di sini)"></textarea>
       <button class="save-btn" onclick="saveData('harga-consensus-ai')">Simpan</button>
       <label class="upload-btn">
@@ -236,8 +254,8 @@
       <div id="consensus-ai-imgs" class="img-preview-container"></div>
     </div>
     
-    <div class="item" id="item-smallpdf" data-name="smallpdf">
-      <h3>SmallPDF</h3>
+    <div class="item" id="item-smallpdf" data-name="smallpdf" style="display:none">
+      <h3>smallpdf</h3>
       <textarea id="harga-smallpdf" placeholder="(tulis harga di sini)"></textarea>
       <button class="save-btn" onclick="saveData('harga-smallpdf')">Simpan</button>
       <label class="upload-btn">
@@ -249,8 +267,8 @@
       <div id="smallpdf-imgs" class="img-preview-container"></div>
     </div>
     
-    <div class="item" id="item-numerade" data-name="numerade">
-      <h3>Numerade</h3>
+    <div class="item" id="item-numerade" data-name="numerade" style="display:none">
+      <h3>numerade</h3>
       <textarea id="harga-numerade" placeholder="(tulis harga di sini)"></textarea>
       <button class="save-btn" onclick="saveData('harga-numerade')">Simpan</button>
       <label class="upload-btn">
@@ -262,8 +280,8 @@
       <div id="numerade-imgs" class="img-preview-container"></div>
     </div>
     
-    <div class="item" id="item-humata-ai" data-name="humata ai">
-      <h3>Humata AI</h3>
+    <div class="item" id="item-humata-ai" data-name="humata ai" style="display:none">
+      <h3>humata ai</h3>
       <textarea id="harga-humata-ai" placeholder="(tulis harga di sini)"></textarea>
       <button class="save-btn" onclick="saveData('harga-humata-ai')">Simpan</button>
       <label class="upload-btn">
@@ -275,8 +293,8 @@
       <div id="humata-ai-imgs" class="img-preview-container"></div>
     </div>
     
-    <div class="item" id="item-perplexity-ai" data-name="perplexity ai">
-      <h3>Perplexity AI</h3>
+    <div class="item" id="item-perplexity-ai" data-name="perplexity ai" style="display:none">
+      <h3>perplexity ai</h3>
       <textarea id="harga-perplexity-ai" placeholder="(tulis harga di sini)"></textarea>
       <button class="save-btn" onclick="saveData('harga-perplexity-ai')">Simpan</button>
       <label class="upload-btn">
@@ -288,8 +306,8 @@
       <div id="perplexity-ai-imgs" class="img-preview-container"></div>
     </div>
     
-    <div class="item" id="item-connected-ai" data-name="connected ai">
-      <h3>Connected AI</h3>
+    <div class="item" id="item-connected-ai" data-name="connected ai" style="display:none">
+      <h3>connected ai</h3>
       <textarea id="harga-connected-ai" placeholder="(tulis harga di sini)"></textarea>
       <button class="save-btn" onclick="saveData('harga-connected-ai')">Simpan</button>
       <label class="upload-btn">
@@ -301,8 +319,8 @@
       <div id="connected-ai-imgs" class="img-preview-container"></div>
     </div>
     
-    <div class="item" id="item-scribd" data-name="scribd">
-      <h3>Scribd</h3>
+    <div class="item" id="item-scribd" data-name="scribd" style="display:none">
+      <h3>scribd</h3>
       <textarea id="harga-scribd" placeholder="(tulis harga di sini)"></textarea>
       <button class="save-btn" onclick="saveData('harga-scribd')">Simpan</button>
       <label class="upload-btn">
@@ -314,8 +332,8 @@
       <div id="scribd-imgs" class="img-preview-container"></div>
     </div>
     
-    <div class="item" id="item-wps-office" data-name="wps office">
-      <h3>WPS Office</h3>
+    <div class="item" id="item-wps-office" data-name="wps office" style="display:none">
+      <h3>wps office</h3>
       <textarea id="harga-wps-office" placeholder="(tulis harga di sini)"></textarea>
       <button class="save-btn" onclick="saveData('harga-wps-office')">Simpan</button>
       <label class="upload-btn">
@@ -327,8 +345,8 @@
       <div id="wps-office-imgs" class="img-preview-container"></div>
     </div>
     
-    <div class="item" id="item-gamma-ai" data-name="gamma ai">
-      <h3>Gamma AI</h3>
+    <div class="item" id="item-gamma-ai" data-name="gamma ai" style="display:none">
+      <h3>gamma ai</h3>
       <textarea id="harga-gamma-ai" placeholder="(tulis harga di sini)"></textarea>
       <button class="save-btn" onclick="saveData('harga-gamma-ai')">Simpan</button>
       <label class="upload-btn">
@@ -340,8 +358,8 @@
       <div id="gamma-ai-imgs" class="img-preview-container"></div>
     </div>
     
-    <div class="item" id="item-canva" data-name="canva">
-      <h3>Canva</h3>
+    <div class="item" id="item-canva" data-name="canva" style="display:none">
+      <h3>canva</h3>
       <textarea id="harga-canva" placeholder="(tulis harga di sini)"></textarea>
       <button class="save-btn" onclick="saveData('harga-canva')">Simpan</button>
       <label class="upload-btn">
@@ -353,8 +371,8 @@
       <div id="canva-imgs" class="img-preview-container"></div>
     </div>
     
-    <div class="item" id="item-picsart" data-name="picsart">
-      <h3>PicsArt</h3>
+    <div class="item" id="item-picsart" data-name="picsart" style="display:none">
+      <h3>picsart</h3>
       <textarea id="harga-picsart" placeholder="(tulis harga di sini)"></textarea>
       <button class="save-btn" onclick="saveData('harga-picsart')">Simpan</button>
       <label class="upload-btn">
@@ -366,8 +384,8 @@
       <div id="picsart-imgs" class="img-preview-container"></div>
     </div>
     
-    <div class="item" id="item-vidio-prime" data-name="vidio prime">
-      <h3>Vidio Prime</h3>
+    <div class="item" id="item-vidio-prime" data-name="vidio prime" style="display:none">
+      <h3>vidio prime</h3>
       <textarea id="harga-vidio-prime" placeholder="(tulis harga di sini)"></textarea>
       <button class="save-btn" onclick="saveData('harga-vidio-prime')">Simpan</button>
       <label class="upload-btn">
@@ -379,8 +397,8 @@
       <div id="vidio-prime-imgs" class="img-preview-container"></div>
     </div>
     
-    <div class="item" id="item-viu" data-name="viu">
-      <h3>Viu</h3>
+    <div class="item" id="item-viu" data-name="viu" style="display:none">
+      <h3>viu</h3>
       <textarea id="harga-viu" placeholder="(tulis harga di sini)"></textarea>
       <button class="save-btn" onclick="saveData('harga-viu')">Simpan</button>
       <label class="upload-btn">
@@ -392,8 +410,8 @@
       <div id="viu-imgs" class="img-preview-container"></div>
     </div>
     
-    <div class="item" id="item-cek-nomor-gtc" data-name="cek nomor gtc">
-      <h3>Cek Nomor GTC</h3>
+    <div class="item" id="item-cek-nomor-gtc" data-name="cek nomor gtc" style="display:none">
+      <h3>cek nomor gtc</h3>
       <textarea id="harga-cek-nomor-gtc" placeholder="(tulis harga di sini)"></textarea>
       <button class="save-btn" onclick="saveData('harga-cek-nomor-gtc')">Simpan</button>
       <label class="upload-btn">
@@ -405,8 +423,8 @@
       <div id="cek-nomor-gtc-imgs" class="img-preview-container"></div>
     </div>
     
-    <div class="item" id="item-koin-line" data-name="koin line">
-      <h3>Koin Line</h3>
+    <div class="item" id="item-koin-line" data-name="koin line" style="display:none">
+      <h3>koin line</h3>
       <textarea id="harga-koin-line" placeholder="(tulis harga di sini)"></textarea>
       <button class="save-btn" onclick="saveData('harga-koin-line')">Simpan</button>
       <label class="upload-btn">
@@ -418,8 +436,8 @@
       <div id="koin-line-imgs" class="img-preview-container"></div>
     </div>
     
-    <div class="item" id="item-busuu" data-name="busuu">
-      <h3>Busuu</h3>
+    <div class="item" id="item-busuu" data-name="busuu" style="display:none">
+      <h3>busuu</h3>
       <textarea id="harga-busuu" placeholder="(tulis harga di sini)"></textarea>
       <button class="save-btn" onclick="saveData('harga-busuu')">Simpan</button>
       <label class="upload-btn">
@@ -431,8 +449,8 @@
       <div id="busuu-imgs" class="img-preview-container"></div>
     </div>
     
-    <div class="item" id="item-blackbox-ai" data-name="blackbox ai">
-      <h3>Blackbox AI</h3>
+    <div class="item" id="item-blackbox-ai" data-name="blackbox ai" style="display:none">
+      <h3>blackbox ai</h3>
       <textarea id="harga-blackbox-ai" placeholder="(tulis harga di sini)"></textarea>
       <button class="save-btn" onclick="saveData('harga-blackbox-ai')">Simpan</button>
       <label class="upload-btn">
@@ -445,109 +463,89 @@
     </div>
     </div>
   </div>
+<script>
+let productList = JSON.parse(localStorage.getItem('productList') || '[]');
 
-  <footer>
-    &copy; 2025 StudyNeeds by Angel Store
-  </footer>
+function saveData(id) {
+  const value = document.getElementById(id).value;
+  localStorage.setItem(id, value);
+}
 
-  <script>
-    function saveData(id) {
-      const value = document.getElementById(id).value;
-      localStorage.setItem(id, value);
-    }
+function uploadImage(event, containerId) {
+  const reader = new FileReader();
+  reader.onload = function() {
+    const base64 = reader.result;
+    const img = document.createElement('img');
+    img.className = 'img-preview';
+    img.src = base64;
+    document.getElementById(containerId).appendChild(img);
+    let images = JSON.parse(localStorage.getItem(containerId) || '[]');
+    images.push(base64);
+    localStorage.setItem(containerId, JSON.stringify(images));
+  };
+  reader.readAsDataURL(event.target.files[0]);
+}
 
-    function uploadImage(event, containerId) {
-      const reader = new FileReader();
-      reader.onload = function(){
-        const base64 = reader.result;
-        const imgContainer = document.getElementById(containerId);
-        const img = document.createElement('img');
-        img.className = 'img-preview';
-        img.src = base64;
-        imgContainer.appendChild(img);
+function clearImages(id) {
+  localStorage.removeItem(id);
+  document.getElementById(id).innerHTML = '';
+}
 
-        const currentImages = JSON.parse(localStorage.getItem(containerId) || '[]');
-        currentImages.push(base64);
-        localStorage.setItem(containerId, JSON.stringify(currentImages));
-      };
-      reader.readAsDataURL(event.target.files[0]);
-    }
+function deleteProduct(id) {
+  const el = document.getElementById("item-" + id);
+  if (el) el.remove();
+  localStorage.removeItem("harga-" + id);
+  localStorage.removeItem(id + "-imgs");
+  productList = productList.filter(p => p !== id);
+  localStorage.setItem('productList', JSON.stringify(productList));
+}
 
-    function clearImages(containerId) {
-      localStorage.removeItem(containerId);
-      const imgContainer = document.getElementById(containerId);
-      imgContainer.innerHTML = '';
-    }
+function loadSaved(id) {
+  const harga = localStorage.getItem("harga-" + id);
+  if (harga) document.getElementById("harga-" + id).value = harga;
+  const images = JSON.parse(localStorage.getItem(id + "-imgs") || "[]");
+  const container = document.getElementById(id + "-imgs");
+  if (container && images.length) {
+    container.innerHTML = '';
+    images.forEach(src => {
+      const img = document.createElement('img');
+      img.className = 'img-preview';
+      img.src = src;
+      container.appendChild(img);
+    });
+  }
+}
 
-    function addProduct(name) {
-      let productName = name || document.getElementById('newProductName').value.trim();
-      if (!productName) return alert('Isi nama produk!');
-      const id = productName.toLowerCase().replace(/\s+/g, '-');
-      const html = `
-      <div class="item" id="item-${id}" data-name="${productName.toLowerCase()}">
-        <h3>${productName}</h3>
-        <textarea id="harga-${id}" placeholder="(tulis harga di sini)"></textarea>
-        <button class="save-btn" onclick="saveData('harga-${id}')">Simpan</button>
-        <label class="upload-btn">
-          Upload Gambar Harga
-          <input type="file" accept="image/*" onchange="uploadImage(event, '${id}-imgs')" style="display: none;">
-        </label>
-        <button class="clear-img-btn" onclick="clearImages('${id}-imgs')">Hapus Semua Gambar</button>
-        <button class="delete-btn" onclick="deleteProduct('${id}')">Hapus Produk</button>
-        <div id="${id}-imgs" class="img-preview-container"></div>
-      </div>`;
-      document.getElementById('productList').insertAdjacentHTML('beforeend', html);
-      loadSaved(id);
-      document.getElementById('newProductName').value = '';
-      storeProduct(id, productName);
-    }
+function filterItems() {
+  const input = document.getElementById("search").value.toLowerCase();
+  document.querySelectorAll(".item").forEach(div => {
+    const name = div.getAttribute("data-name");
+    div.style.display = name.includes(input) ? "" : "none";
+  });
+}
 
-    function deleteProduct(id) {
-      const el = document.getElementById(`item-${id}`);
-      if (el) el.remove();
-      localStorage.removeItem(`harga-${id}`);
-      localStorage.removeItem(`${id}-imgs`);
-      let list = JSON.parse(localStorage.getItem('productList') || '[]');
-      list = list.filter(p => p.id !== id);
-      localStorage.setItem('productList', JSON.stringify(list));
-    }
+function addProduct() {
+  const name = document.getElementById("newProductName").value.trim();
+  if (!name) return;
+  const id = name.toLowerCase().replace(/\s+/g, "-");
+  if (productList.includes(id)) return alert("Produk sudah ada!");
+  productList.push(id);
+  localStorage.setItem('productList', JSON.stringify(productList));
+  location.reload();
+}
 
-    function filterItems() {
-      const filter = document.getElementById('searchBar').value.toLowerCase();
-      document.querySelectorAll('.item').forEach(div => {
-        div.style.display = div.dataset.name.includes(filter) ? '' : 'none';
-      });
-    }
+let showAll = false;
+function toggleList() {
+  showAll = !showAll;
+  document.querySelectorAll(".item").forEach((item, i) => {
+    if (i !== 0) item.style.display = showAll ? '' : 'none';
+  });
+  document.getElementById("toggleBtn").textContent = showAll ? "Tampilkan Lebih Sedikit" : "Tampilkan Semua Produk";
+}
 
-    function storeProduct(id, name) {
-      let list = JSON.parse(localStorage.getItem('productList') || '[]');
-      if (!list.find(p => p.id === id)) {
-        list.push({id, name});
-        localStorage.setItem('productList', JSON.stringify(list));
-      }
-    }
-
-    function loadSaved(id) {
-      const t = document.getElementById(`harga-${id}`);
-      const imgs = JSON.parse(localStorage.getItem(`${id}-imgs`) || '[]');
-      const imgContainer = document.getElementById(`${id}-imgs`);
-      if (t) t.value = localStorage.getItem(`harga-${id}`) || '';
-      imgs.forEach(src => {
-        const img = document.createElement('img');
-        img.className = 'img-preview';
-        img.src = src;
-        imgContainer.appendChild(img);
-      });
-    }
-
-    function loadAll() {
-      const saved = JSON.parse(localStorage.getItem('productList') || '[]');
-      saved.forEach(p => addProduct(p.name));
-    }
-
-    window.onload = function() {
-      loadAll();
-    };
-  </script>
+window.onload = function() {
+  loadSaved('cek-turnitin-imgs');loadSaved('cek-ai-indo--eng-imgs');loadSaved('translate-file-deepl-imgs');loadSaved('unlock-docs-imgs');loadSaved('akun-chatgpt-proplus-imgs');loadSaved('akun-turnitin-biasa-imgs');loadSaved('akun-turnitin-cek-ai-imgs');loadSaved('akun-gptzero-imgs');loadSaved('akun-deepl-pro-imgs');loadSaved('scite-ai-imgs');loadSaved('quillbot-imgs');loadSaved('duolingo-imgs');loadSaved('grammarly-imgs');loadSaved('consensus-ai-imgs');loadSaved('smallpdf-imgs');loadSaved('numerade-imgs');loadSaved('humata-ai-imgs');loadSaved('perplexity-ai-imgs');loadSaved('connected-ai-imgs');loadSaved('scribd-imgs');loadSaved('wps-office-imgs');loadSaved('gamma-ai-imgs');loadSaved('canva-imgs');loadSaved('picsart-imgs');loadSaved('vidio-prime-imgs');loadSaved('viu-imgs');loadSaved('cek-nomor-gtc-imgs');loadSaved('koin-line-imgs');loadSaved('busuu-imgs');loadSaved('blackbox-ai-imgs');
+};
+</script>
 </body>
 </html>
