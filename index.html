@@ -47,18 +47,20 @@
       border: 1px solid #ccc;
       border-radius: 8px;
     }
-    .save-btn, .upload-btn, .clear-img-btn, .delete-btn, .add-btn {
+    .btn {
       margin-top: 10px;
       padding: 8px 12px;
       border: none;
       border-radius: 6px;
       cursor: pointer;
+      color: white;
     }
-    .save-btn { background-color: #ff4d4d; color: white; }
-    .upload-btn { background-color: #ffaa00; color: white; }
-    .clear-img-btn { background-color: #bb33ff; color: white; }
-    .delete-btn { background-color: #999999; color: white; }
-    .add-btn { background-color: #4CAF50; color: white; display: block; margin-top: 20px; }
+    .save-btn { background-color: #ff4d4d; }
+    .upload-btn { background-color: #ffaa00; }
+    .clear-img-btn { background-color: #bb33ff; }
+    .delete-btn { background-color: #999999; }
+    .add-btn { background-color: #4CAF50; display: block; margin-top: 20px; }
+    .save-img-btn { background-color: #007bff; }
   </style>
 </head>
 <body>
@@ -70,11 +72,9 @@
     <input type="text" id="search" placeholder="Cari produk..." onkeyup="filterItems()" style="width:100%; padding:10px; margin-bottom:20px;">
     <input type="text" id="newProductName" placeholder="Nama produk baru" style="width:100%; padding:10px;">
     <button class="add-btn" onclick="addProduct()">Tambah Produk</button>
-    <button class="add-btn" onclick="toggleList()" id="toggleBtn">Tampilkan Semua Produk</button>
     <div id="product-list"></div>
   </div>
 <script>
-let showAll = false;
 let productList = JSON.parse(localStorage.getItem('productList') || '[]');
 const defaultProducts = [
   "cek turnitin","cek ai indo & eng","translate file (deepl)","unlock docs","akun chatgpt pro/plus",
@@ -93,13 +93,14 @@ function createItem(name) {
   div.innerHTML = `
     <h3>${name}</h3>
     <textarea id="harga-${id}" placeholder="(tulis harga di sini)"></textarea>
-    <button class="save-btn" onclick="saveData('harga-${id}')">Simpan</button>
-    <label class="upload-btn">
+    <button class="btn save-btn" onclick="saveData('harga-${id}')">Simpan Harga</button>
+    <label class="btn upload-btn">
       Upload Gambar Harga
       <input type="file" accept="image/*" onchange="uploadImage(event, '${id}-imgs')" style="display: none;">
     </label>
-    <button class="clear-img-btn" onclick="clearImages('${id}-imgs')">Hapus Semua Gambar</button>
-    <button class="delete-btn" onclick="deleteProduct('${id}')">Hapus Produk</button>
+    <button class="btn save-img-btn" onclick="saveImages('${id}-imgs')">Simpan Gambar</button>
+    <button class="btn clear-img-btn" onclick="clearImages('${id}-imgs')">Hapus Semua Gambar</button>
+    <button class="btn delete-btn" onclick="deleteProduct('${id}')">Hapus Produk</button>
     <div id="${id}-imgs" class="img-preview-container"></div>
   `;
   document.getElementById("product-list").appendChild(div);
@@ -113,16 +114,19 @@ function saveData(id) {
 function uploadImage(event, containerId) {
   const reader = new FileReader();
   reader.onload = function() {
-    const base64 = reader.result;
     const img = document.createElement('img');
     img.className = 'img-preview';
-    img.src = base64;
+    img.src = reader.result;
     document.getElementById(containerId).appendChild(img);
-    let images = JSON.parse(localStorage.getItem(containerId) || '[]');
-    images.push(base64);
-    localStorage.setItem(containerId, JSON.stringify(images));
   };
   reader.readAsDataURL(event.target.files[0]);
+}
+
+function saveImages(containerId) {
+  const imgs = document.getElementById(containerId).querySelectorAll('img');
+  const data = [];
+  imgs.forEach(img => data.push(img.src));
+  localStorage.setItem(containerId, JSON.stringify(data));
 }
 
 function clearImages(id) {
@@ -144,15 +148,12 @@ function loadSaved(id) {
   if (harga) document.getElementById("harga-" + id).value = harga;
   const images = JSON.parse(localStorage.getItem(id + "-imgs") || "[]");
   const container = document.getElementById(id + "-imgs");
-  if (container && images.length) {
-    container.innerHTML = '';
-    images.forEach(src => {
-      const img = document.createElement('img');
-      img.className = 'img-preview';
-      img.src = src;
-      container.appendChild(img);
-    });
-  }
+  images.forEach(src => {
+    const img = document.createElement('img');
+    img.className = 'img-preview';
+    img.src = src;
+    container.appendChild(img);
+  });
 }
 
 function loadAllSaved() {
@@ -162,7 +163,6 @@ function loadAllSaved() {
     createItem(name);
     loadSaved(id);
   });
-  toggleList();
 }
 
 function filterItems() {
@@ -181,15 +181,6 @@ function addProduct() {
   productList.push(id);
   localStorage.setItem('productList', JSON.stringify(productList));
   createItem(name);
-  loadSaved(id);
-}
-
-function toggleList() {
-  showAll = !showAll;
-  document.querySelectorAll(".item").forEach((item, i) => {
-    if (i !== 0) item.style.display = showAll ? '' : 'none';
-  });
-  document.getElementById("toggleBtn").textContent = showAll ? "Tampilkan Lebih Sedikit" : "Tampilkan Semua Produk";
 }
 
 window.onload = loadAllSaved;
