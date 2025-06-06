@@ -1,16 +1,17 @@
 
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>StudyNeeds by Angel Store</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Comic+Neue&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Comic Neue', cursive;
       background: #fff0f0;
       margin: 0;
+      padding: 0;
     }
     header {
       background-color: #ff9999;
@@ -19,22 +20,22 @@
       color: white;
     }
     .container {
-      padding: 20px;
       max-width: 800px;
       margin: auto;
+      padding: 20px;
     }
     .item {
-      background: white;
+      background-color: white;
+      margin-bottom: 15px;
       padding: 15px;
-      margin-bottom: 20px;
-      border-radius: 8px;
+      border-radius: 10px;
       box-shadow: 0 0 5px rgba(0,0,0,0.1);
     }
     textarea {
       width: 100%;
-      padding: 8px;
+      padding: 10px;
       margin-top: 10px;
-      border-radius: 4px;
+      font-family: inherit;
     }
     .img-preview-container {
       display: flex;
@@ -43,147 +44,137 @@
       margin-top: 10px;
     }
     .img-preview {
-      max-height: 200px;
+      max-height: 150px;
       border: 1px solid #ccc;
-      border-radius: 8px;
+      border-radius: 5px;
     }
     .btn {
-      margin-top: 10px;
+      margin-top: 8px;
       padding: 8px 12px;
       border: none;
-      border-radius: 6px;
-      cursor: pointer;
+      border-radius: 5px;
       color: white;
+      cursor: pointer;
     }
     .save-btn { background-color: #ff4d4d; }
     .upload-btn { background-color: #ffaa00; }
+    .delete-btn { background-color: #777; }
     .clear-img-btn { background-color: #bb33ff; }
-    .delete-btn { background-color: #999999; }
-    .add-btn { background-color: #4CAF50; display: block; margin-top: 20px; }
+    .toggle-btn, .add-btn { background-color: #4CAF50; margin: 10px 0; }
     .save-img-btn { background-color: #007bff; }
   </style>
 </head>
 <body>
   <header>
     <h1>StudyNeeds by Angel Store</h1>
-    <p>Kelola semua produk jualanmu dengan mudah!</p>
+    <p>Kelola dan simpan semua data jualanmu tanpa takut hilang!</p>
   </header>
   <div class="container">
-    <input type="text" id="search" placeholder="Cari produk..." onkeyup="filterItems()" style="width:100%; padding:10px; margin-bottom:20px;">
-    <input type="text" id="newProductName" placeholder="Nama produk baru" style="width:100%; padding:10px;">
-    <button class="add-btn" onclick="addProduct()">Tambah Produk</button>
+    <input type="text" id="search" placeholder="Cari produk..." onkeyup="filterItems()" style="width:100%;padding:10px;margin-bottom:20px;" />
+    <input type="text" id="newProductName" placeholder="Nama produk baru" style="width:100%;padding:10px;" />
+    <button class="btn add-btn" onclick="addProduct()">Tambah Produk</button>
+    <button class="btn toggle-btn" onclick="toggleShow()" id="toggleButton">Tampilkan Lebih Banyak</button>
     <div id="product-list"></div>
   </div>
-<script>
-let productList = JSON.parse(localStorage.getItem('productList') || '[]');
-const defaultProducts = [
-  "cek turnitin","cek ai indo & eng","translate file (deepl)","unlock docs","akun chatgpt pro/plus",
-  "akun turnitin biasa","akun turnitin cek ai","akun gptzero","akun deepl pro","scite ai","quillbot",
-  "duolingo","grammarly","consensus ai","smallpdf","numerade","humata ai","perplexity ai","connected ai",
-  "scribd","wps office","gamma ai","canva","picsart","vidio prime","viu","cek nomor gtc","koin line",
-  "busuu","blackbox ai"
-];
+  <script>
+    let products = JSON.parse(localStorage.getItem("products") || "[]");
+    let showAll = false;
+    const defaultProducts = [
+      "cek turnitin", "cek ai indo & eng", "translate file (deepl)", "unlock docs", "akun chatgpt pro/plus",
+      "akun turnitin biasa", "akun turnitin cek ai", "akun gptzero", "akun deepl pro", "scite ai", "quillbot",
+      "duolingo", "grammarly", "consensus ai", "smallpdf", "numerade", "humata ai", "perplexity ai", "connected ai",
+      "scribd", "wps office", "gamma ai", "canva", "picsart", "vidio prime", "viu", "cek nomor gtc", "koin line",
+      "busuu", "blackbox ai"
+    ];
 
-function createItem(name) {
-  const id = name.toLowerCase().replace(/[^a-z0-9]/g, "-");
-  const div = document.createElement("div");
-  div.className = "item";
-  div.id = "item-" + id;
-  div.setAttribute("data-name", name.toLowerCase());
-  div.innerHTML = `
-    <h3>${name}</h3>
-    <textarea id="harga-${id}" placeholder="(tulis harga di sini)"></textarea>
-    <button class="btn save-btn" onclick="saveData('harga-${id}')">Simpan Harga</button>
-    <label class="btn upload-btn">
-      Upload Gambar Harga
-      <input type="file" accept="image/*" onchange="uploadImage(event, '${id}-imgs')" style="display: none;">
-    </label>
-    <button class="btn save-img-btn" onclick="saveImages('${id}-imgs')">Simpan Gambar</button>
-    <button class="btn clear-img-btn" onclick="clearImages('${id}-imgs')">Hapus Semua Gambar</button>
-    <button class="btn delete-btn" onclick="deleteProduct('${id}')">Hapus Produk</button>
-    <div id="${id}-imgs" class="img-preview-container"></div>
-  `;
-  document.getElementById("product-list").appendChild(div);
-}
+    if (products.length === 0) {
+      products = defaultProducts.map(name => ({ name, harga: "", images: [] }));
+      localStorage.setItem("products", JSON.stringify(products));
+    }
 
-function saveData(id) {
-  const value = document.getElementById(id).value;
-  localStorage.setItem(id, value);
-}
+    function saveToLocalStorage() {
+      localStorage.setItem("products", JSON.stringify(products));
+    }
 
-function uploadImage(event, containerId) {
-  const reader = new FileReader();
-  reader.onload = function() {
-    const img = document.createElement('img');
-    img.className = 'img-preview';
-    img.src = reader.result;
-    document.getElementById(containerId).appendChild(img);
-  };
-  reader.readAsDataURL(event.target.files[0]);
-}
+    function renderProducts() {
+      const list = document.getElementById("product-list");
+      list.innerHTML = "";
+      let displayed = showAll ? products : products.slice(0, 1);
+      displayed.forEach((p, index) => {
+        const id = p.name.toLowerCase().replace(/[^a-z0-9]/g, "-");
+        const div = document.createElement("div");
+        div.className = "item";
+        div.setAttribute("data-name", p.name.toLowerCase());
+        div.innerHTML = `
+          <h3>${p.name}</h3>
+          <textarea onchange="updateHarga(${index}, this.value)" placeholder="Tulis harga...">${p.harga}</textarea>
+          <input type="file" accept="image/*" onchange="uploadImage(event, ${index})" class="btn upload-btn" />
+          <button class="btn save-img-btn" onclick="saveToLocalStorage()">Simpan Gambar</button>
+          <button class="btn clear-img-btn" onclick="clearImages(${index})">Hapus Semua Gambar</button>
+          <button class="btn delete-btn" onclick="deleteProduct(${index})">Hapus Produk</button>
+          <div class="img-preview-container" id="img-${index}">
+            ${p.images.map(src => `<img src="${src}" class="img-preview" />`).join("")}
+          </div>
+        `;
+        list.appendChild(div);
+      });
+      document.getElementById("toggleButton").innerText = showAll ? "Tampilkan Lebih Sedikit" : "Tampilkan Lebih Banyak";
+    }
 
-function saveImages(containerId) {
-  const imgs = document.getElementById(containerId).querySelectorAll('img');
-  const data = [];
-  imgs.forEach(img => data.push(img.src));
-  localStorage.setItem(containerId, JSON.stringify(data));
-}
+    function updateHarga(index, value) {
+      products[index].harga = value;
+      saveToLocalStorage();
+    }
 
-function clearImages(id) {
-  localStorage.removeItem(id);
-  document.getElementById(id).innerHTML = '';
-}
+    function uploadImage(event, index) {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        products[index].images.push(reader.result);
+        saveToLocalStorage();
+        renderProducts();
+      };
+      reader.readAsDataURL(file);
+    }
 
-function deleteProduct(id) {
-  const el = document.getElementById("item-" + id);
-  if (el) el.remove();
-  localStorage.removeItem("harga-" + id);
-  localStorage.removeItem(id + "-imgs");
-  productList = productList.filter(p => p !== id);
-  localStorage.setItem('productList', JSON.stringify(productList));
-}
+    function clearImages(index) {
+      products[index].images = [];
+      saveToLocalStorage();
+      renderProducts();
+    }
 
-function loadSaved(id) {
-  const harga = localStorage.getItem("harga-" + id);
-  if (harga) document.getElementById("harga-" + id).value = harga;
-  const images = JSON.parse(localStorage.getItem(id + "-imgs") || "[]");
-  const container = document.getElementById(id + "-imgs");
-  images.forEach(src => {
-    const img = document.createElement('img');
-    img.className = 'img-preview';
-    img.src = src;
-    container.appendChild(img);
-  });
-}
+    function deleteProduct(index) {
+      products.splice(index, 1);
+      saveToLocalStorage();
+      renderProducts();
+    }
 
-function loadAllSaved() {
-  const all = [...new Set([...defaultProducts, ...productList])];
-  all.forEach(name => {
-    const id = name.toLowerCase().replace(/[^a-z0-9]/g, "-");
-    createItem(name);
-    loadSaved(id);
-  });
-}
+    function addProduct() {
+      const name = document.getElementById("newProductName").value.trim();
+      if (!name) return;
+      if (products.some(p => p.name.toLowerCase() === name.toLowerCase())) {
+        alert("Produk sudah ada.");
+        return;
+      }
+      products.push({ name, harga: "", images: [] });
+      saveToLocalStorage();
+      renderProducts();
+    }
 
-function filterItems() {
-  const input = document.getElementById("search").value.toLowerCase();
-  document.querySelectorAll(".item").forEach(div => {
-    const name = div.getAttribute("data-name");
-    div.style.display = name.includes(input) ? "" : "none";
-  });
-}
+    function filterItems() {
+      const input = document.getElementById("search").value.toLowerCase();
+      document.querySelectorAll(".item").forEach(div => {
+        const name = div.getAttribute("data-name");
+        div.style.display = name.includes(input) ? "" : "none";
+      });
+    }
 
-function addProduct() {
-  const name = document.getElementById("newProductName").value.trim();
-  if (!name) return;
-  const id = name.toLowerCase().replace(/[^a-z0-9]/g, "-");
-  if (productList.includes(id)) return alert("Produk sudah ada!");
-  productList.push(id);
-  localStorage.setItem('productList', JSON.stringify(productList));
-  createItem(name);
-}
+    function toggleShow() {
+      showAll = !showAll;
+      renderProducts();
+    }
 
-window.onload = loadAllSaved;
-</script>
+    window.onload = renderProducts;
+  </script>
 </body>
 </html>
