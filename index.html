@@ -61,7 +61,6 @@
     .delete-btn { background-color: #777; }
     .clear-img-btn { background-color: #bb33ff; }
     .toggle-btn, .add-btn { background-color: #4CAF50; margin: 10px 0; }
-    .save-img-btn { background-color: #007bff; }
   </style>
 </head>
 <body>
@@ -108,17 +107,27 @@
         div.innerHTML = `
           <h3>${p.name}</h3>
           <textarea onchange="updateHarga(${index}, this.value)" placeholder="Tulis harga...">${p.harga}</textarea>
-          <input type="file" accept="image/*" onchange="uploadImage(event, ${index})" class="btn upload-btn" />
-          <button class="btn save-img-btn" onclick="saveToLocalStorage()">Simpan Gambar</button>
+          <input type="file" accept="image/*" onchange="resizeAndUploadImage(event, ${index})" class="btn upload-btn" />
           <button class="btn clear-img-btn" onclick="clearImages(${index})">Hapus Semua Gambar</button>
           <button class="btn delete-btn" onclick="deleteProduct(${index})">Hapus Produk</button>
-          <div class="img-preview-container" id="img-${index}">
-            ${p.images.map(src => `<img src="${src}" class="img-preview" />`).join("")}
-          </div>
+          <div class="img-preview-container" id="img-${index}"></div>
         `;
         list.appendChild(div);
+        renderImages(index);
       });
       document.getElementById("toggleButton").innerText = showAll ? "Tampilkan Lebih Sedikit" : "Tampilkan Lebih Banyak";
+    }
+
+    function renderImages(index) {
+      const container = document.getElementById(`img-${index}`);
+      if (!container) return;
+      container.innerHTML = "";
+      products[index].images.forEach(src => {
+        const img = document.createElement("img");
+        img.src = src;
+        img.className = "img-preview";
+        container.appendChild(img);
+      });
     }
 
     function updateHarga(index, value) {
@@ -126,13 +135,26 @@
       saveToLocalStorage();
     }
 
-    function uploadImage(event, index) {
+    function resizeAndUploadImage(event, index) {
       const file = event.target.files[0];
+      if (!file) return;
       const reader = new FileReader();
-      reader.onload = () => {
-        products[index].images.push(reader.result);
-        saveToLocalStorage();
-        renderProducts();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 400;
+          const scaleSize = MAX_WIDTH / img.width;
+          canvas.width = MAX_WIDTH;
+          canvas.height = img.height * scaleSize;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.7);
+          products[index].images.push(compressedDataUrl);
+          saveToLocalStorage();
+          renderImages(index);
+        };
+        img.src = e.target.result;
       };
       reader.readAsDataURL(file);
     }
@@ -140,7 +162,7 @@
     function clearImages(index) {
       products[index].images = [];
       saveToLocalStorage();
-      renderProducts();
+      renderImages(index);
     }
 
     function deleteProduct(index) {
